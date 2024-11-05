@@ -29,7 +29,7 @@ Ini adalah proyek akhir dari Dicoding dalam kursus "Belajar Analisis Data Dengan
 4. Create Dashboard Apss using Streamlit (via Apss.ipynb)
 
 ## 3. Memulia Project
-1. git clone https://github.com/ReginaAyumi/analisis-data-project.git
+1. git clone https://github.com/WawanFirgiawan/Analisis-Data-Bike-Sharing.git
 3. cd Analisis-Data-Bike-Sharing
 5. pip install -r requirements.txt
 4. cd Analisis-Data-Bike-Sharing/
