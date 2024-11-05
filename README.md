@@ -37,6 +37,8 @@ Ini adalah proyek akhir dari Dicoding dalam kursus "Belajar Analisis Data Dengan
 
 ## 4. Screenshots
 
-![alt text](https://github.com/WawanFirgiawan/Analisis-Data-Bike-Sharing/tree/main/screenshots/Screenshot_1.png?raw=true)
 
-![alt text](https://github.com/WawanFirgiawan/Analisis-Data-Bike-Sharing/tree/main/screenshots/Screenshot_2.png?raw=true)
+
+![alt text](https://github.com/WawanFirgiawan/Analisis-Data-Bike-Sharing/blob/main/Screenshots/Screenshot_1.png?raw=true)
+
+![alt text](https://github.com/WawanFirgiawan/Analisis-Data-Bike-Sharing/blob/main/Screenshots/Screenshot_2.png?raw=true)
