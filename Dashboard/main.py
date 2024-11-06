@@ -6,10 +6,7 @@ import streamlit as st
 sns.set(style='dark')
 
 # Memuat data dari file CSV
-df_day = pd.read_csv("day.csv")
-
-# Menghapus kolom yang tidak diperlukan
-df_day.drop(columns=['windspeed'], inplace=True)
+df_day = pd.read_csv("day_test.csv")
 
 # Mengubah nama kolom
 df_day.rename(columns={
@@ -34,8 +31,7 @@ min_date = pd.to_datetime(df_day['dateday']).dt.date.min()
 max_date = pd.to_datetime(df_day['dateday']).dt.date.max()
 
 with st.sidebar:
-    st.image(
-        'sota.png')
+    st.image('sota.png')  # Sesuaikan path logo Anda jika diperlukan
 
     # Mengambil start_date & end_date dari date_input
     start_date, end_date = st.date_input(
@@ -63,12 +59,8 @@ workingday_rent_df = create_aggregated_df(df_day, 'workingday', 'count')
 holiday_rent_df = create_aggregated_df(df_day, 'holiday', 'count')
 weather_rent_df = create_aggregated_df(df_day, 'weathersit', 'count')
 
-# Membuat komponen filter
-min_date = df_day['dateday'].min()
-max_date = df_day['dateday'].max()
-
 # Membuat Dashboard
-st.header('Bike Rental By Wawan Firgiawan')
+st.header('Bike Rental Analysis Dashboard by Wawan Firgiawan')
 
 # Penyewaan harian
 st.subheader('Daily Rentals')
@@ -83,65 +75,91 @@ with col3:
 
 # Penyewaan berdasarkan musim
 st.subheader('Seasonly Rentals')
-fig, ax = plt.subplots(figsize=(16, 8))
-sns.barplot(x='season', y='registered', data=season_rent_df, color='tab:blue', ax=ax)
-sns.barplot(x='season', y='casual', data=season_rent_df, color='tab:orange', ax=ax)
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.barplot(x='season', y='registered', data=season_rent_df, color='tab:blue', ax=ax, label="Registered")
+sns.barplot(x='season', y='casual', data=season_rent_df, color='tab:orange', ax=ax, label="Casual")
 
 for index, row in season_rent_df.iterrows():
-    ax.text(index, row['registered'], str(row['registered']), ha='center', va='bottom', fontsize=12)
-    ax.text(index, row['casual'], str(row['casual']), ha='center', va='bottom', fontsize=12)
+    ax.text(index, row['registered'], str(row['registered']), ha='center', va='bottom', fontsize=10)
+    ax.text(index, row['casual'], str(row['casual']), ha='center', va='bottom', fontsize=10)
 
-ax.set_xlabel(None)
-ax.set_ylabel(None)
-ax.tick_params(axis='x', labelsize=20)
-ax.tick_params(axis='y', labelsize=15)
+ax.set_xlabel("Season")
+ax.set_ylabel("Number of Rentals")
 ax.legend()
 st.pyplot(fig)
 
 # Penyewaan berdasarkan kondisi cuaca
 st.subheader('Weatherly Rentals')
-fig, ax = plt.subplots(figsize=(16, 8))
+fig, ax = plt.subplots(figsize=(10, 6))
 sns.barplot(x=weather_rent_df.index, y=weather_rent_df['count'], palette=["tab:blue", "tab:orange", "tab:green"], ax=ax)
 
 for index, row in enumerate(weather_rent_df['count']):
-    ax.text(index, row + 1, str(row), ha='center', va='bottom', fontsize=12)
+    ax.text(index, row + 1, str(row), ha='center', va='bottom', fontsize=10)
 
-ax.set_xlabel(None)
-ax.set_ylabel(None)
-ax.tick_params(axis='x', labelsize=20)
-ax.tick_params(axis='y', labelsize=15)
+ax.set_xlabel("Weather Condition")
+ax.set_ylabel("Number of Rentals")
 st.pyplot(fig)
 
-# Penyewaan berdasarkan weekday, working, dan holiday
+# Penyewaan berdasarkan weekday, workingday, dan holiday
 st.subheader('Weekday, Workingday, and Holiday Rentals')
-fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(15, 10))
+fig, axes = plt.subplots(nrows=3, ncols=1, figsize=(10, 15))
 
 # Berdasarkan workingday
 sns.barplot(x='workingday', y='count', data=workingday_rent_df, palette=["tab:blue", "tab:orange"], ax=axes[0])
-for index, row in enumerate(workingday_rent_df['count']):
-    axes[0].text(index, row + 1, str(row), ha='center', va='bottom', fontsize=12)
-axes[0].set_title('Number of Rents based on Working Day')
-axes[0].tick_params(axis='x', labelsize=15)
-axes[0].tick_params(axis='y', labelsize=10)
+axes[0].set_title('Number of Rentals Based on Working Day')
+axes[0].set_xlabel("Working Day")
+axes[0].set_ylabel("Count")
 
 # Berdasarkan holiday
 sns.barplot(x='holiday', y='count', data=holiday_rent_df, palette=["tab:blue", "tab:orange"], ax=axes[1])
-for index, row in enumerate(holiday_rent_df['count']):
-    axes[1].text(index, row + 1, str(row), ha='center', va='bottom', fontsize=12)
-axes[1].set_title('Number of Rents based on Holiday')
-axes[1].tick_params(axis='x', labelsize=15)
-axes[1].tick_params(axis='y', labelsize=10)
+axes[1].set_title('Number of Rentals Based on Holiday')
+axes[1].set_xlabel("Holiday")
+axes[1].set_ylabel("Count")
 
 # Berdasarkan weekday
-sns.barplot(x='weekday', y='count', data=weekday_rent_df, palette=["tab:blue", "tab:orange", "tab:green", "tab:red", "tab:purple", "tab:brown", "tab:pink"], ax=axes[2])
-for index, row in enumerate(weekday_rent_df['count']):
-    axes[2].text(index, row + 1, str(row), ha='center', va='bottom', fontsize=12)
-axes[2].set_title('Number of Rents based on Weekday')
-axes[2].tick_params(axis='x', labelsize=15)
-axes[2].tick_params(axis='y', labelsize=10)
+sns.barplot(x='weekday', y='count', data=weekday_rent_df, palette="Blues", ax=axes[2])
+axes[2].set_title('Number of Rentals Based on Weekday')
+axes[2].set_xlabel("Weekday")
+axes[2].set_ylabel("Count")
 
 plt.tight_layout()
 st.pyplot(fig)
 
+# Analisis Kecepatan Angin dan Penggunaan Sepeda
+st.subheader('Analysis of Wind Speed and Bike Rentals')
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.scatterplot(x='windspeed', y='count', data=df_day, ax=ax, color='blue', alpha=0.6)
+ax.set_title("Relationship between Wind Speed and Bike Rentals")
+ax.set_xlabel("Wind Speed (Normalized)")
+ax.set_ylabel("Bike Rentals Count")
+st.pyplot(fig)
+
+# Menampilkan statistik deskriptif windspeed
+st.subheader("Descriptive Statistics for Wind Speed")
+st.write(df_day['windspeed'].describe())
+
+# Menambahkan bar chart berdasarkan rentang kecepatan angin
+st.subheader("Bike Rentals by Wind Speed Categories")
+
+# Membuat kategori kecepatan angin
+wind_speed_bins = [0, 0.2, 0.4, 0.6, 0.8, 1.0]
+wind_speed_labels = ["Very Low", "Low", "Moderate", "High", "Very High"]
+df_day['wind_speed_category'] = pd.cut(df_day['windspeed'], bins=wind_speed_bins, labels=wind_speed_labels)
+
+# Menghitung total penggunaan sepeda berdasarkan kategori kecepatan angin
+wind_speed_rentals = df_day.groupby('wind_speed_category')['count'].sum().reset_index()
+
+# Membuat bar chart
+fig, ax = plt.subplots(figsize=(10, 6))
+sns.barplot(x='wind_speed_category', y='count', data=wind_speed_rentals, palette="Blues", ax=ax)
+ax.set_title("Bike Rentals by Wind Speed Categories")
+ax.set_xlabel("Wind Speed Category")
+ax.set_ylabel("Total Bike Rentals")
+st.pyplot(fig)
+
 # Menampilkan hak cipta
-st.caption('Copyright (c) Wawan Firgiawan 2024')
+st.markdown(
+    "========================================================================================"
+    "<h4 style='text-align: center; font-weight: bold;'>Copyright (c) Wawan Firgiawan 2024</h4>",
+    unsafe_allow_html=True
+)
